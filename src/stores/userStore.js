@@ -1,10 +1,8 @@
-import {
-  observable, action, computed, configure,
-} from 'mobx';
-import { AsyncStorage } from 'react-native';
-import CallApi from '../api/api';
+import { observable, action, computed, configure } from "mobx";
+import { AsyncStorage } from "react-native";
+import CallApi from "../api/api";
 
-configure({ enforceActions: 'always' });
+configure({ enforceActions: "always" });
 
 class UserStore {
   @observable user = {};
@@ -16,53 +14,53 @@ class UserStore {
   }
 
   @action
-  resetUserInfo = () => {
-    cookies.remove('session_id', { path: '/' });
+  resetUserInfo = async () => {
+    await AsyncStorage.removeItem("session_id");
     this.user = {};
     this.session_id = null;
-    CallApi.delete('/authentication/session', {
+    CallApi.delete("/authentication/session", {
       body: {
-        session_id: this.session_id,
-      },
+        session_id: this.session_id
+      }
     });
   };
 
   @action
-  updateSessionId = (session_id) => {
+  updateSessionId = session_id => {
     this.session_id = session_id;
   };
 
   @action
-  updateUser = (user) => {
+  updateUser = user => {
     this.user = user;
   };
 
   @action
   updateAuth = async ({ session_id, user }) => {
     try {
-      await AsyncStorage.setItem('session_id', session_id);
+      await AsyncStorage.setItem("session_id", session_id);
       this.updateSessionId(session_id);
       this.updateUser(user);
     } catch (error) {
-      console.log('error saving data');
+      console.log("error saving data");
     }
   };
 
   @action
   getUser = async () => {
     try {
-      const session_id = await AsyncStorage.getItem('session_id');
+      const session_id = await AsyncStorage.getItem("session_id");
       if (session_id) {
-        CallApi.get('/account', {
+        CallApi.get("/account", {
           params: {
-            session_id,
-          },
-        }).then((user) => {
+            session_id
+          }
+        }).then(user => {
           this.updateAuth({ session_id, user });
         });
       }
     } catch (error) {
-      console.log('fail!');
+      console.log("fail!");
     }
   };
 }

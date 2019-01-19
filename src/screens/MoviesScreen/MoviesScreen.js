@@ -1,33 +1,30 @@
-import React from 'react';
-import {
-  StyleSheet, Text, View, FlatList,
-} from 'react-native';
-import { inject, observer } from 'mobx-react';
-import PropTypes from 'prop-types';
-import MovieItem from './MovieItem';
-//import Filters from '../../Filters/Filters';
-import HeaderComponent from '../../Header/HeaderComponent';
+import React from "react";
+import { StyleSheet, Text, View, FlatList } from "react-native";
+import { inject, observer } from "mobx-react";
+import PropTypes from "prop-types";
+import MovieItem from "../../components/Movies/MovieItem";
+import HeaderComponent from "../../components/Header/HeaderComponent";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
+    backgroundColor: "#fff"
+  }
 });
 
-@inject('moviesPageStore')
+@inject("moviesPageStore")
 @observer
 class MoviesScreen extends React.Component {
   componentDidMount() {
     const {
-      moviesPageStore: { getMovies },
+      moviesPageStore: { getMovies }
     } = this.props;
     getMovies();
   }
 
   render() {
     const {
-      moviesPageStore: { isLoading, movies },
+      moviesPageStore: { isLoading, movies }
     } = this.props;
     return (
       <View style={styles.container}>
@@ -47,7 +44,7 @@ class MoviesScreen extends React.Component {
 }
 
 MoviesScreen.propTypes = {
-  moviesPageStore: PropTypes.object,
+  moviesPageStore: PropTypes.object
 };
 
 export default MoviesScreen;

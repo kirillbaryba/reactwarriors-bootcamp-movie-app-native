@@ -1,11 +1,12 @@
-import React from 'react';
-import { Header, Icon } from 'react-native-elements';
-import { inject, observer } from 'mobx-react';
-import { Actions } from 'react-native-router-flux';
-import User from './User';
+import React from "react";
+import { TouchableOpacity } from "react-native";
+import { Header, Icon } from "react-native-elements";
+import { inject, observer } from "mobx-react";
+import { Actions } from "react-native-router-flux";
+import User from "./User";
 
 @inject(({ userStore }) => ({
-  userStore,
+  userStore
 }))
 @observer
 class HeaderComponent extends React.Component {
@@ -15,14 +16,16 @@ class HeaderComponent extends React.Component {
 
   render() {
     const {
-      userStore: { isAuth },
+      userStore: { isAuth }
     } = this.props;
     return (
       <Header
         leftComponent={
-          <Icon type="feather" name="filter" color="#fff" onPress={this.handlePress} />
+          <TouchableOpacity onPress={this.handlePress} style={{ padding: 10 }}>
+            <Icon type="feather" name="filter" color="#fff" />
+          </TouchableOpacity>
         }
-        rightComponent={isAuth ? <User /> : { icon: 'home', color: '#fff' }}
+        rightComponent={isAuth ? <User /> : { icon: "home", color: "#fff" }}
       />
     );
   }
