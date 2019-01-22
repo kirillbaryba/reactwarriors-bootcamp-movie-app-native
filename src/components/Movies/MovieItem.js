@@ -34,9 +34,13 @@ const styles = StyleSheet.create({
     padding: 10
   },
   wrapper: {
-    flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between"
+    alignItems: "center"
+  },
+  rating: {
+    position: "absolute",
+    top: 0,
+    right: 0
   }
 });
 
@@ -50,13 +54,13 @@ const MovieItem = ({ item, style }) => (
         }}
         style={styles.image}
       />
-      <View>
+      <View style={style.wrapper}>
         <View>
           <Text style={styles.text}>{item.title}</Text>
           <Text style={styles.date}>Release date: {item.release_date}</Text>
         </View>
 
-        <View>
+        <View style={styles.rating}>
           <PercentageCircle
             ItemSeparatorComponent
             radius={16}
