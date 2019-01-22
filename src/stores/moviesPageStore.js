@@ -1,14 +1,12 @@
-import {
-  observable, action, configure, reaction, values,
-} from 'mobx';
-import CallApi from '../api/api';
+import { observable, action, configure, reaction, values } from "mobx";
+import CallApi from "../api/api";
 
-configure({ enforceActions: 'always' });
+configure({ enforceActions: "always" });
 
 const defaultFilters = {
-  sort_by: 'popularity.desc',
-  primary_release_year: '2019',
-  with_genres: [],
+  sort_by: "popularity.desc",
+  primary_release_year: "2019",
+  with_genres: []
 };
 
 class MoviesPageStore {
@@ -17,16 +15,16 @@ class MoviesPageStore {
   @observable isLoading = false;
 
   @observable filters = {
-    sort_by: 'popularity.desc',
-    primary_release_year: '2019',
-    with_genres: [],
+    sort_by: "popularity.desc",
+    primary_release_year: "2018",
+    with_genres: []
   };
 
   @observable genresList = [];
 
   @observable page = 1;
 
-  @observable total_pages = '';
+  @observable total_pages = "";
 
   @action
   getMovies = () => {
@@ -34,17 +32,18 @@ class MoviesPageStore {
     const { sort_by, primary_release_year, with_genres } = this.filters;
 
     const queryStringParams = {
-      language: 'ru-RU',
+      language: "ru-RU",
       sort_by,
       page: this.page,
-      primary_release_year,
+      primary_release_year
     };
 
-    if (with_genres.length > 0) queryStringParams.with_genres = with_genres.join(',');
+    if (with_genres.length > 0)
+      queryStringParams.with_genres = with_genres.join(",");
 
-    CallApi.get('/discover/movie', {
-      params: queryStringParams,
-    }).then((data) => {
+    CallApi.get("/discover/movie", {
+      params: queryStringParams
+    }).then(data => {
       this.updateMovies(data.results);
       this.updateLoading(false);
       this.getTotalPages(data.total_pages);
@@ -53,42 +52,42 @@ class MoviesPageStore {
 
   @action
   getGenres = () => {
-    CallApi.get('/genre/movie/list', {
+    CallApi.get("/genre/movie/list", {
       params: {
-        language: 'ru-RU',
-      },
-    }).then((data) => {
+        language: "ru-RU"
+      }
+    }).then(data => {
       this.updateGenresList(data.genres);
     });
   };
 
   @action
-  updateGenresList = (genres) => {
+  updateGenresList = genres => {
     this.genresList = genres;
   };
 
   @action
-  updateMovies = (movies) => {
+  updateMovies = movies => {
     this.movies = movies;
   };
 
   @action
-  updateLoading = (value) => {
+  updateLoading = value => {
     this.isLoading = value;
   };
 
   @action
-  getTotalPages = (total_pages) => {
+  getTotalPages = total_pages => {
     this.total_pages = total_pages;
   };
 
   @action
-  onChangePage = (page) => {
+  onChangePage = page => {
     this.page = page;
   };
 
   @action
-  updateFilters = (filters) => {
+  updateFilters = filters => {
     for (const key in filters) {
       this.filters[key] = filters[key];
     }
@@ -98,23 +97,25 @@ class MoviesPageStore {
   clearAllFilters = () => {
     this.updateFilters(defaultFilters);
     this.page = 1;
-    this.total_pages = '';
+    this.total_pages = "";
   };
 
   @action
-  onChangeFilters = (event) => {
+  onChangeFilters = event => {
     this.filters[event.target.name] = event.target.value;
   };
 
   @action
-  onChangeGenres = (event) => {
+  onChangeGenres = event => {
     this.onChangeFilters({
       target: {
-        name: 'with_genres',
+        name: "with_genres",
         value: event.target.checked
           ? [...this.filters.with_genres, event.target.value]
-          : this.filters.with_genres.filter(genre => genre !== event.target.value),
-      },
+          : this.filters.with_genres.filter(
+              genre => genre !== event.target.value
+            )
+      }
     });
   };
 
@@ -122,9 +123,9 @@ class MoviesPageStore {
   resetGenres = () => {
     this.onChangeFilters({
       target: {
-        name: 'with_genres',
-        value: [],
-      },
+        name: "with_genres",
+        value: []
+      }
     });
   };
 
@@ -146,12 +147,12 @@ reaction(
   () => {
     moviesPageStore.onChangePage(1);
     moviesPageStore.getMovies();
-  },
+  }
 );
 
 reaction(
   () => moviesPageStore.page,
   () => {
     moviesPageStore.getMovies();
-  },
+  }
 );

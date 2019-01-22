@@ -1,7 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
-import { Card } from "react-native-elements";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  Animated
+} from "react-native";
 import PercentageCircle from "react-native-percentage-circle";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -34,32 +40,38 @@ const styles = StyleSheet.create({
   }
 });
 
-const MovieItem = ({ item }) => (
+const MovieItem = ({ item, style }) => (
   <View style={styles.card}>
-    <Image
-      source={{
-        uri: `https://image.tmdb.org/t/p/w500${item.backdrop_path ||
-          item.poster_path}`
-      }}
-      style={styles.image}
-    />
-    <View style={styles.wrapper}>
-      <View>
-        <Text style={styles.text}>{item.title}</Text>
-        <Text style={styles.date}>Release date: {item.release_date}</Text>
-      </View>
-      <PercentageCircle
-        ItemSeparatorComponent
-        radius={16}
-        percent={item.vote_average * 10}
-        color="salmon"
+    <Animated.View style={style}>
+      <Image
+        source={{
+          uri: `https://image.tmdb.org/t/p/w500${item.backdrop_path ||
+            item.poster_path}`
+        }}
+        style={styles.image}
       />
-    </View>
+      <View>
+        <View>
+          <Text style={styles.text}>{item.title}</Text>
+          <Text style={styles.date}>Release date: {item.release_date}</Text>
+        </View>
+
+        <View>
+          <PercentageCircle
+            ItemSeparatorComponent
+            radius={16}
+            percent={item.vote_average * 10}
+            color="salmon"
+          />
+        </View>
+      </View>
+    </Animated.View>
   </View>
 );
 
 MovieItem.propTypes = {
-  item: PropTypes.object
+  item: PropTypes.object,
+  style: PropTypes.object
 };
 
 export default MovieItem;

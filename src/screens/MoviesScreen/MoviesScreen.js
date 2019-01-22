@@ -1,5 +1,12 @@
 import React from "react";
-import { StyleSheet, Text, View, Animated, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Animated,
+  FlatList,
+  Dimensions
+} from "react-native";
 import { inject, observer } from "mobx-react";
 import PropTypes from "prop-types";
 import MovieItem from "../../components/Movies/MovieItem";
@@ -10,6 +17,36 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff"
   }
+});
+
+const AnimatedFlatList = Animated.createAnimatedComponent(FlatList);
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const x = new Animated.Value(0);
+
+const transitionAnimation = index => ({
+  transform: [
+    { perspective: 300 },
+    {
+      scale: x.interpolate({
+        inputRange: [
+          (index - 1) * SCREEN_WIDTH,
+          index * SCREEN_WIDTH,
+          (index + 1) * SCREEN_WIDTH
+        ],
+        outputRange: [0.9, 1, 0.9]
+      })
+    },
+    {
+      rotateY: x.interpolate({
+        inputRange: [
+          (index - 1) * SCREEN_WIDTH,
+          index * SCREEN_WIDTH,
+          (index + 1) * SCREEN_WIDTH
+        ],
+        outputRange: ["-10deg", "0deg", "10deg"]
+      })
+    }
+  ]
 });
 
 @inject("moviesPageStore")
@@ -32,13 +69,25 @@ class MoviesScreen extends React.Component {
         {isLoading ? (
           <Text>...loading</Text>
         ) : (
-          <FlatList
-            pagingEnabled
-            initialNumToRender={1}
+          <AnimatedFlatList
+            style={{ width: SCREEN_WIDTH }}
             horizontal
+            showsHorizontalScrollIndicator={false}
+            pagingEnabled
+            scrollEventThrottle={16}
+            onScroll={Animated.event(
+              [{ nativeEvent: { contentOffset: { x } } }],
+              { useNativeDriver: true }
+            )}
             data={movies}
-            renderItem={({ item }) => <MovieItem item={item} />}
             keyExtractor={item => String(item.id)}
+            renderItem={({ item, index }) => (
+              <MovieItem
+                item={item}
+                index={index}
+                style={transitionAnimation(index)}
+              />
+            )}
           />
         )}
       </View>
