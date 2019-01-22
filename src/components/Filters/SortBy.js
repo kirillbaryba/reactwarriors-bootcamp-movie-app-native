@@ -1,8 +1,8 @@
-import React from 'react';
-import { inject, observer } from 'mobx-react';
-import PropTypes from 'prop-types';
-import { View, Text, StyleSheet } from 'react-native';
-import RNPickerSelect from 'react-native-picker-select';
+import React from "react";
+import { inject, observer } from "mobx-react";
+import PropTypes from "prop-types";
+import { View, Text, StyleSheet } from "react-native";
+import RNPickerSelect from "react-native-picker-select";
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
@@ -11,53 +11,53 @@ const pickerSelectStyles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingBottom: 12,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: "gray",
     borderRadius: 4,
-    backgroundColor: 'white',
-    color: 'black',
-  },
+    backgroundColor: "white",
+    color: "black"
+  }
 });
 
-@inject('moviesPageStore')
+@inject("moviesPageStore")
 @observer
 class SortBy extends React.Component {
   static defaultProps = {
     optionsSortBy: [
       {
-        label: 'Популярные по убыванию',
-        value: 'popularity.desc',
+        label: "Популярные по убыванию",
+        value: "popularity.desc"
       },
       {
-        label: 'Популярные по возростанию',
-        value: 'popularity.asc',
+        label: "Популярные по возростанию",
+        value: "popularity.asc"
       },
       {
-        label: 'Рейтинг по убыванию',
-        value: 'vote_average.desc',
+        label: "Рейтинг по убыванию",
+        value: "vote_average.desc"
       },
       {
-        label: 'Рейтинг по возростанию',
-        value: 'vote_average.asc',
-      },
-    ],
+        label: "Рейтинг по возростанию",
+        value: "vote_average.asc"
+      }
+    ]
   };
 
-  handleFiltersChange = (itemValue) => {
+  handleFiltersChange = itemValue => {
     const {
-      moviesPageStore: { onChangeFilters },
+      moviesPageStore: { onChangeFilters }
     } = this.props;
     onChangeFilters({
       target: {
-        name: 'sort_by',
-        value: itemValue,
-      },
+        name: "sort_by",
+        value: itemValue
+      }
     });
   };
 
   render() {
     const {
       moviesPageStore: { filters },
-      optionsSortBy,
+      optionsSortBy
     } = this.props;
     return (
       <View>
@@ -65,12 +65,6 @@ class SortBy extends React.Component {
         <RNPickerSelect
           items={optionsSortBy}
           onValueChange={this.handleFiltersChange}
-          onUpArrow={() => {
-            this.inputRefs.name.focus();
-          }}
-          onDownArrow={() => {
-            this.inputRefs.picker2.togglePicker();
-          }}
           value={filters.sort_by}
           style={{ ...pickerSelectStyles }}
         />
@@ -81,7 +75,7 @@ class SortBy extends React.Component {
 
 SortBy.propTypes = {
   moviesPageStore: PropTypes.object,
-  optionsSortBy: PropTypes.array,
+  optionsSortBy: PropTypes.array
 };
 
 export default SortBy;

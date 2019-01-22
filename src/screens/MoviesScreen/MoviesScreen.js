@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, Text, View, Animated, FlatList } from "react-native";
 import { inject, observer } from "mobx-react";
 import PropTypes from "prop-types";
 import MovieItem from "../../components/Movies/MovieItem";
@@ -33,6 +33,9 @@ class MoviesScreen extends React.Component {
           <Text>...loading</Text>
         ) : (
           <FlatList
+            pagingEnabled
+            initialNumToRender={1}
+            horizontal
             data={movies}
             renderItem={({ item }) => <MovieItem item={item} />}
             keyExtractor={item => String(item.id)}

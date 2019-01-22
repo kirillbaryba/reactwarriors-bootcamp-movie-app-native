@@ -1,25 +1,24 @@
-import React from 'react';
-import { Avatar } from 'react-native-elements';
-import { inject, observer } from 'mobx-react';
+import React from "react";
+import { Image } from "react-native";
+import { inject, observer } from "mobx-react";
 
 @inject(({ userStore }) => ({
-  userStore,
+  userStore
 }))
 @observer
 class User extends React.Component {
   render() {
     const {
-      userStore: { user },
+      userStore: { user }
     } = this.props;
     return (
-      <Avatar
-        size="small"
-        rounded
+      <Image
         source={{
-          uri: `https://www.gravatar.com/avatar/${user.avatar.gravatar.hash}.jpg?s=40`,
+          uri: `https://www.gravatar.com/avatar/${
+            user.avatar.gravatar.hash
+          }.jpg?s=40`
         }}
-        onPress={() => console.log('Works!')}
-        activeOpacity={0.7}
+        style={{ width: 30, height: 30, borderRadius: 15 }}
       />
     );
   }
